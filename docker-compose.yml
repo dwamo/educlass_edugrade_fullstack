@@ -29,7 +29,7 @@ services:
         condition: service_healthy
 
   frontend:
-    build: ./educlass-dev-branch
+    build: ./educal_edugrade_frontend
     ports:
       - "5173:5173"
     depends_on:

@@ -39,7 +39,7 @@
 1. Navigate to the frontend directory:
 
    ```
-   cd educlass-dev-branch
+   cd educal_edugrade_frontend
    ```
 
 2. Install dependencies:

@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: merged_super
+      POSTGRES_PASSWORD: test123
+      POSTGRES_DB: merged_system_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U merged_super -d merged_system_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./educal_edugrade_backend
+    environment:
+      DATABASE_URL: postgresql+asyncpg://merged_super:test123@db:5432/merged_system_db
+      CORS_ORIGINS: "http://localhost:5173,http://frontend:5173"
+    volumes:
+      - backend_uploads:/app/uploads
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: ./educlass-dev-branch
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
+  backend_uploads:
